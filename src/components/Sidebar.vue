@@ -10,16 +10,25 @@
       unique-opened
       router
     >
-      <el-submenu index="1">
+      <el-menu-item index="/welcome">
+        <i class="el-icon-s-home"></i>
+        <span slot="title">欢迎页</span>
+      </el-menu-item>
+      <el-submenu
+        :index="oneAction.path"
+        v-for="oneAction in menuList"
+        :key="oneAction.id"
+      >
         <template slot="title">
-          <i class="el-icon-school"></i>
-          <span>学院管理</span>
+          <i :class="oneAction.icon"></i>
+          <span>{{ oneAction.name }}</span>
         </template>
-        <el-menu-item index="/role">
-          <i class="el-icon-s-check"></i>角色管理</el-menu-item
+        <el-menu-item
+          :index="twoAction.path"
+          v-for="twoAction in oneAction.children"
+          :key="twoAction.id"
         >
-        <el-menu-item index="/grade">
-          <i class="el-icon-s-home"></i>班级管理</el-menu-item
+          <i :class="twoAction.icon"></i>{{ twoAction.name }}</el-menu-item
         >
       </el-submenu>
     </el-menu>
@@ -31,12 +40,19 @@ import bus from './bus'
 export default {
   data() {
     return {
-      collapse: false
+      collapse: false,
+      menuList: []
     }
   },
   computed: {
     onRoutes() {
-      return this.$route.path.replace('/', '')
+      return this.$route.path
+    }
+  },
+  methods: {
+    async getMenuList() {
+      const { data: res } = await this.$axios.get('action/GetMenu')
+      this.menuList = res.data
     }
   },
   created() {
@@ -45,6 +61,8 @@ export default {
       this.collapse = msg
       bus.$emit('collapse-content', msg)
     })
+    //加载侧边栏数据
+    this.getMenuList()
   }
 }
 </script>

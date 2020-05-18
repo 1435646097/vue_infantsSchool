@@ -5,31 +5,37 @@ import Welcome from '../components/Welcom.vue'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Role from '../components/Home/Role.vue'
+import Action from '../components/Home/Action.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/Login',
+    path: '/login',
     component: Login
   },
   {
     path: '/',
-    redirect: '/Login'
+    redirect: '/login'
   },
   {
-    path: '/Home',
+    path: '/home',
     component: Home,
-    redirect: '/Welcome',
+    redirect: '/welcome',
     children: [
       {
-        path: '/Welcome',
+        path: '/welcome',
         component: Welcome,
         meta: { title: '欢迎页' }
       },
       {
-        path: '/Role',
+        path: '/role',
         component: Role,
-        meta: { title: '角色管理' }
+        meta: { title: '角色列表' }
+      },
+      {
+        path: '/action',
+        component: Action,
+        meta: { title: '权限列表' }
       }
     ]
   },
@@ -44,20 +50,20 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-// router.beforeEach((to, from, next) => {
-//   const token = window.sessionStorage.getItem('token')
-//   console.log(token)
-//   //去login
-//   if (to.path == '/login') {
-//     if (token != null) {
-//       return next('/home')
-//     }
-//     return next()
-//   }
-//   //不去login
-//   if (token == null) {
-//     return next('/login')
-//   }
-//   return next()
-// })
+router.beforeEach((to, from, next) => {
+  const token = window.sessionStorage.getItem('token')
+  console.log(token)
+  //去login
+  if (to.path == '/login') {
+    if (token != null) {
+      return next('/home')
+    }
+    return next()
+  }
+  //不去login
+  if (token == null) {
+    return next('/login')
+  }
+  return next()
+})
 export default router

@@ -5,7 +5,7 @@ import store from './store'
 import ElementUI from 'element-ui'
 import VueI18n from 'vue-i18n'
 import { messages } from './components/i18n'
-// import './assets/css/global.css'
+import './assets/css/global.css'
 import 'element-ui/lib/theme-chalk/index.css' //默认主题
 import './assets/css/icon.css'
 import Axios from 'axios'
