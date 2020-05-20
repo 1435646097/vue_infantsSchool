@@ -10,11 +10,18 @@ import 'element-ui/lib/theme-chalk/index.css' //默认主题
 import './assets/css/icon.css'
 import Axios from 'axios'
 import './components/directives'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 Vue.config.productionTip = false
 Axios.defaults.baseURL = 'http://localhost:5000/api/'
 Axios.interceptors.request.use((config) => {
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
+Axios.interceptors.response.use((config) => {
+  NProgress.done()
   return config
 })
 Vue.prototype.$axios = Axios

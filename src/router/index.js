@@ -6,6 +6,7 @@ import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Role from '../components/Home/Role.vue'
 import Action from '../components/Home/Action.vue'
+import Student from '../components/Home/Student.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -36,6 +37,11 @@ const routes = [
         path: '/action',
         component: Action,
         meta: { title: '权限列表' }
+      },
+      {
+        path: '/student',
+        component: Student,
+        meta: { title: '学生列表' }
       }
     ]
   },
