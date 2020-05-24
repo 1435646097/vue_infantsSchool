@@ -7,6 +7,7 @@ import Home from '../components/Home.vue'
 import Role from '../components/Home/Role.vue'
 import Action from '../components/Home/Action.vue'
 import Student from '../components/Home/Student.vue'
+import User from '../components/Home/User.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -42,6 +43,11 @@ const routes = [
         path: '/student',
         component: Student,
         meta: { title: '学生列表' }
+      },
+      {
+        path: '/user',
+        component: User,
+        meta: { title: '用户列表' }
       }
     ]
   },

@@ -131,6 +131,7 @@
       <el-alert
         title="注意：如果没有选择父级权限则添加的权限为一级权限"
         type="warning"
+        :closable="false"
         show-icon
         center
       >
@@ -172,18 +173,6 @@
         <el-button type="primary" @click="editAction">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 分页区域 -->
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="queryInfo.pageNum"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="queryInfo.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="totalCount"
-      background
-    >
-    </el-pagination>
   </div>
 </template>
 
@@ -255,6 +244,7 @@ export default {
         }
         this.$message.success('添加权限成功！')
         this.getActionList()
+        this.GetActionAllList()
         this.addDialogVisible = false
       })
     },
@@ -279,6 +269,7 @@ export default {
         return this.$message.error('删除异常，请稍后重试！')
       }
       this.$message.success('删除成功！')
+      this.GetActionAllList()
       this.getActionList()
     },
     //当前pageSize改变
