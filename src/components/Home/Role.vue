@@ -6,132 +6,134 @@
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
       <el-breadcrumb-item>角色列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 添加区域 -->
-    <el-row>
-      <el-col>
-        <el-button type="primary" @click="showAddDialog">添加角色</el-button>
-      </el-col>
-    </el-row>
-    <!-- 表格显示区域 -->
-    <el-table :data="roleList" border stripe>
-      <el-table-column type="index" label="#"></el-table-column>
-      <el-table-column prop="name" label="角色名称"></el-table-column>
-      <el-table-column prop="remark" label="角色备注"></el-table-column>
-      <el-table-column prop="isDelete" label="角色状态">
-        <template v-slot="scope">
-          <el-switch
-            v-model="scope.row.isDelete"
-            active-color="#ff4949"
-            inactive-color="#13ce66"
-            @change="editStatus(scope.row)"
-          >
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template v-slot="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="showEditDialog(scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            icon="el-icon-delete"
-            @click="deleteRole(scope.row)"
-            >删除</el-button
-          >
-          <el-button
-            type="warning"
-            icon="el-icon-setting"
-            size="mini"
-            @click="showActionDialog(scope.row)"
-            >分配权限</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 添加角色的dialog -->
-    <el-dialog
-      title="添加角色"
-      :visible.sync="addDialogVisible"
-      width="50%"
-      @close="addDialogClosed"
-    >
-      <!-- 主体区域 -->
-      <el-form
-        ref="addFormRef"
-        :model="addForm"
-        :rules="addFormRules"
-        label-width="80px"
+    <el-card>
+      <!-- 添加区域 -->
+      <el-row>
+        <el-col>
+          <el-button type="primary" @click="showAddDialog">添加角色</el-button>
+        </el-col>
+      </el-row>
+      <!-- 表格显示区域 -->
+      <el-table :data="roleList" border stripe>
+        <el-table-column type="index" label="#"></el-table-column>
+        <el-table-column prop="name" label="角色名称"></el-table-column>
+        <el-table-column prop="remark" label="角色备注"></el-table-column>
+        <el-table-column prop="isDelete" label="角色状态">
+          <template v-slot="scope">
+            <el-switch
+              v-model="scope.row.isDelete"
+              active-color="#ff4949"
+              inactive-color="#13ce66"
+              @change="editStatus(scope.row)"
+            >
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              @click="showEditDialog(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="deleteRole(scope.row)"
+              >删除</el-button
+            >
+            <el-button
+              type="warning"
+              icon="el-icon-setting"
+              size="mini"
+              @click="showActionDialog(scope.row)"
+              >分配权限</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 添加角色的dialog -->
+      <el-dialog
+        title="添加角色"
+        :visible.sync="addDialogVisible"
+        width="50%"
+        @close="addDialogClosed"
       >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addForm.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addRole">确 定</el-button>
-      </span>
-    </el-dialog>
+        <!-- 主体区域 -->
+        <el-form
+          ref="addFormRef"
+          :model="addForm"
+          :rules="addFormRules"
+          label-width="80px"
+        >
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="addForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="addForm.remark"></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addRole">确 定</el-button>
+        </span>
+      </el-dialog>
 
-    <!-- 编辑角色的dialog -->
-    <el-dialog
-      title="添加角色"
-      :visible.sync="editDialogVisible"
-      width="50%"
-      @close="editDialogClosed"
-    >
-      <!-- 主体区域 -->
-      <el-form
-        ref="editFormRef"
-        :model="editForm"
-        :rules="editFormRules"
-        label-width="80px"
+      <!-- 编辑角色的dialog -->
+      <el-dialog
+        title="添加角色"
+        :visible.sync="editDialogVisible"
+        width="50%"
+        @close="editDialogClosed"
       >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="editForm.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editRole">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 设置权限区域 -->
-    <el-dialog
-      title="设置角色权限"
-      :visible.sync="setActionDialogVisible"
-      width="50%"
-      @close="resetAction()"
-    >
-      <!-- 对话框的主体部分 -->
-      <el-tree
-        :data="actionList"
-        :props="actionProps"
-        show-checkbox
-        node-key="id"
-        default-expand-all
-        :default-checked-keys="delKeys"
-        ref="treeRef"
-      ></el-tree>
-      <!-- 对话框的底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="setActionDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setRoleAction()">确 定</el-button>
-      </span>
-    </el-dialog>
+        <!-- 主体区域 -->
+        <el-form
+          ref="editFormRef"
+          :model="editForm"
+          :rules="editFormRules"
+          label-width="80px"
+        >
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="editForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="editForm.remark"></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editRole">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- 设置权限区域 -->
+      <el-dialog
+        title="设置角色权限"
+        :visible.sync="setActionDialogVisible"
+        width="50%"
+        @close="resetAction()"
+      >
+        <!-- 对话框的主体部分 -->
+        <el-tree
+          :data="actionList"
+          :props="actionProps"
+          show-checkbox
+          node-key="id"
+          default-expand-all
+          :default-checked-keys="delKeys"
+          ref="treeRef"
+        ></el-tree>
+        <!-- 对话框的底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setActionDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="setRoleAction()">确 定</el-button>
+        </span>
+      </el-dialog>
+    </el-card>
   </div>
 </template>
 

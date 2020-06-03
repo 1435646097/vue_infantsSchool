@@ -8,6 +8,8 @@ import Role from '../components/Home/Role.vue'
 import Action from '../components/Home/Action.vue'
 import Student from '../components/Home/Student.vue'
 import User from '../components/Home/User.vue'
+import Grade from '../components/Home/Grade.vue'
+import Center from '../components/Home/Center.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -48,6 +50,16 @@ const routes = [
         path: '/user',
         component: User,
         meta: { title: '用户列表' }
+      },
+      {
+        path: '/grade',
+        component: Grade,
+        meta: { title: '班级列表' }
+      },
+      {
+        path: '/center',
+        component: Center,
+        meta: { title: '个人详情' }
       }
     ]
   },

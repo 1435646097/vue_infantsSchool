@@ -38,10 +38,13 @@
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            {{ username }}
+            {{ userName }}
             <i class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item divided command="userInfo"
+              >个人信息</el-dropdown-item
+            >
             <el-dropdown-item divided command="loginout"
               >退出登录</el-dropdown-item
             >
@@ -53,21 +56,18 @@
 </template>
 <script>
 import bus from './bus'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       collapse: false,
       fullscreen: false,
       name: 'Paigu',
-      message: 2
+      message: 2,
+      userName: ''
     }
   },
-  computed: {
-    username() {
-      let username = localStorage.getItem('ms_username')
-      return username ? username : this.name
-    }
-  },
+  computed: {},
   methods: {
     // 用户名下拉菜单选择事件
     async handleCommand(command) {
@@ -86,6 +86,9 @@ export default {
           window.sessionStorage.clear()
           this.$router.push('/login')
         }
+      }
+      if (command == 'userInfo') {
+        this.$router.push('/center')
       }
     },
     // 侧边栏折叠
@@ -125,6 +128,13 @@ export default {
     if (document.body.clientWidth < 1500) {
       this.collapseChage()
     }
+  },
+  async created() {
+    const { data: res } = await this.$axios.get('Action/GetUserInfo')
+    this.userName = res.data.name
+    bus.$on('changeName', (name) => {
+      this.userName = name
+    })
   }
 }
 </script>

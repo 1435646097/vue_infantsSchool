@@ -6,210 +6,222 @@
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 添加搜索区域 -->
-    <el-row>
-      <el-col :span="6">
-        <el-button type="primary" @click="addDialogVisible = true"
-          >添加用户</el-button
+    <el-card>
+      <!-- 添加搜索区域 -->
+      <el-row>
+        <el-col :span="6">
+          <el-button type="primary" @click="addDialogVisible = true"
+            >添加用户</el-button
+          >
+        </el-col>
+      </el-row>
+      <!-- 表格数据区域 -->
+      <el-table :data="userList" border stripe>
+        <el-table-column type="index" label="#"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="120"></el-table-column>
+        <el-table-column
+          prop="account"
+          label="账号"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          prop="phone"
+          label="手机"
+          width="200"
+        ></el-table-column>
+        <el-table-column prop="birthday" label="生日" width="150">
+          <template v-slot="scope">
+            {{ scope.row.birthday | dateFormat }}
+          </template>
+        </el-table-column>
+        <el-table-column label="地址" width="200">
+          <template v-slot="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>详细住址: {{ scope.row.addressDetail }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.address }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              @click="showEditDialog(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="deleteUser(scope.row)"
+              >删除</el-button
+            >
+            <el-button
+              size="mini"
+              type="warning"
+              icon="el-icon-setting"
+              @click="showSetRole(scope.row)"
+              >分配角色</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 添加用户的对话框 -->
+      <el-dialog
+        title="添加用户"
+        :visible.sync="addDialogVisible"
+        width="50%"
+        @close="addFromReset"
+      >
+        <el-alert
+          title="注意：添加完用户密码默认为:123456"
+          type="warning"
+          :closable="false"
+          show-icon
+          center
         >
-      </el-col>
-    </el-row>
-    <!-- 表格数据区域 -->
-    <el-table :data="userList" border stripe>
-      <el-table-column type="index" label="#"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-      <el-table-column
-        prop="account"
-        label="账号"
-        width="200"
-      ></el-table-column>
-      <el-table-column prop="phone" label="手机" width="200"></el-table-column>
-      <el-table-column prop="birthday" label="生日" width="150">
-        <template v-slot="scope">
-          {{ scope.row.birthday | dateFormat }}
-        </template>
-      </el-table-column>
-      <el-table-column label="地址" width="200">
-        <template v-slot="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>详细住址: {{ scope.row.addressDetail }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.address }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template v-slot="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            icon="el-icon-edit"
-            @click="showEditDialog(scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            icon="el-icon-delete"
-            @click="deleteUser(scope.row)"
-            >删除</el-button
-          >
-          <el-button
-            size="mini"
-            type="warning"
-            icon="el-icon-setting"
-            @click="showSetRole(scope.row)"
-            >分配角色</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 添加用户的对话框 -->
-    <el-dialog
-      title="添加用户"
-      :visible.sync="addDialogVisible"
-      width="50%"
-      @close="addFromReset"
-    >
-      <el-alert
-        title="注意：添加完用户密码默认为:123456"
-        type="warning"
-        :closable="false"
-        show-icon
-        center
-      >
-      </el-alert>
-      <!-- 对话框主体 -->
-      <el-form
-        ref="addFormRef"
-        :rules="addFormRule"
-        :model="addForm"
-        label-width="80px"
-      >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="addForm.account"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="phone">
-          <el-input v-model="addForm.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="生日" prop="birthday">
-          <el-date-picker
-            type="date"
-            placeholder="选择生日"
-            v-model="addForm.birthday"
-            style="width: 30%;"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd"
-          >
-            ></el-date-picker
-          >
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-cascader
-            v-model="addForm.address"
-            :options="citydata"
-            :props="{ expandTrigger: 'hover' }"
-          ></el-cascader>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="addressDetail">
-          <el-input type="textarea" v-model="addForm.addressDetail"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 对话框底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 编辑用户的对话框 -->
-    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="50%">
-      <!-- 对话框主体 -->
-      <el-form
-        ref="editFormRef"
-        :rules="addFormRule"
-        :model="editForm"
-        label-width="80px"
-      >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="账号" prop="account">
-          <el-input v-model="editForm.account"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="phone">
-          <el-input v-model="editForm.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="生日" prop="birthday">
-          <el-date-picker
-            type="date"
-            placeholder="选择生日"
-            v-model="editForm.birthday"
-            style="width: 30%;"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd"
-          >
-            ></el-date-picker
-          >
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-cascader
-            v-model="editForm.address"
-            :options="citydata"
-            :props="{ expandTrigger: 'hover' }"
-          ></el-cascader>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="addressDetail">
-          <el-input type="textarea" v-model="editForm.addressDetail"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 对话框底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUser">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 分配用户角色对话框 -->
-    <el-dialog
-      title="分配角色权限"
-      :visible.sync="setRoleDialogVisible"
-      @close="resetCheckBox"
-      width="50%"
-    >
-      <!-- 对话框主体 -->
-      <el-checkbox-group v-model="checkList">
-        <el-checkbox
-          :label="item.id"
-          v-for="item in normalRoleList"
-          :key="item.id"
-          border
-          >{{ item.name }}</el-checkbox
+        </el-alert>
+        <!-- 对话框主体 -->
+        <el-form
+          ref="addFormRef"
+          :rules="addFormRule"
+          :model="addForm"
+          label-width="80px"
         >
-      </el-checkbox-group>
-      <!-- 对话框底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setUserRole">确 定</el-button>
-      </span>
-    </el-dialog>
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="addForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="账号" prop="account">
+            <el-input v-model="addForm.account"></el-input>
+          </el-form-item>
+          <el-form-item label="手机" prop="phone">
+            <el-input v-model="addForm.phone"></el-input>
+          </el-form-item>
+          <el-form-item label="生日" prop="birthday">
+            <el-date-picker
+              type="date"
+              placeholder="选择生日"
+              v-model="addForm.birthday"
+              style="width: 30%;"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+            >
+              ></el-date-picker
+            >
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-cascader
+              v-model="addForm.address"
+              :options="citydata"
+              :props="{ expandTrigger: 'hover' }"
+            ></el-cascader>
+          </el-form-item>
+          <el-form-item label="详细地址" prop="addressDetail">
+            <el-input
+              type="textarea"
+              v-model="addForm.addressDetail"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 对话框底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addUser">确 定</el-button>
+        </span>
+      </el-dialog>
 
-    <!-- 分页区域 -->
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="queryInfo.pageNum"
-      :page-sizes="[5, 10, 15, 20]"
-      :page-size="queryInfo.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="totalCount"
-      background
-    >
-    </el-pagination>
+      <!-- 编辑用户的对话框 -->
+      <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="50%">
+        <!-- 对话框主体 -->
+        <el-form
+          ref="editFormRef"
+          :rules="addFormRule"
+          :model="editForm"
+          label-width="80px"
+        >
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="editForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="账号" prop="account">
+            <el-input v-model="editForm.account"></el-input>
+          </el-form-item>
+          <el-form-item label="手机" prop="phone">
+            <el-input v-model="editForm.phone"></el-input>
+          </el-form-item>
+          <el-form-item label="生日" prop="birthday">
+            <el-date-picker
+              type="date"
+              placeholder="选择生日"
+              v-model="editForm.birthday"
+              style="width: 30%;"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
+            >
+              ></el-date-picker
+            >
+          </el-form-item>
+          <el-form-item label="地址" prop="address">
+            <el-cascader
+              v-model="editForm.address"
+              :options="citydata"
+              :props="{ expandTrigger: 'hover' }"
+            ></el-cascader>
+          </el-form-item>
+          <el-form-item label="详细地址" prop="addressDetail">
+            <el-input
+              type="textarea"
+              v-model="editForm.addressDetail"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 对话框底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editUser">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 分配用户角色对话框 -->
+      <el-dialog
+        title="分配角色权限"
+        :visible.sync="setRoleDialogVisible"
+        @close="resetCheckBox"
+        width="50%"
+      >
+        <!-- 对话框主体 -->
+        <el-checkbox-group v-model="checkList">
+          <el-checkbox
+            :label="item.id"
+            v-for="item in normalRoleList"
+            :key="item.id"
+            border
+            >{{ item.name }}</el-checkbox
+          >
+        </el-checkbox-group>
+        <!-- 对话框底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="setUserRole">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 分页区域 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+        background
+      >
+      </el-pagination>
+    </el-card>
   </div>
 </template>
 

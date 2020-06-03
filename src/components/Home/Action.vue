@@ -6,173 +6,183 @@
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
       <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 表格显示区域 -->
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <el-select v-model="queryInfo.level" @change="selectChang">
-          <el-option label="请选择" :value="0"></el-option>
-          <el-option label="一级权限" :value="1"></el-option>
-          <el-option label="二级权限" :value="2"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="10">
-        <el-input
-          placeholder="请输入权限名称"
-          v-model="queryInfo.name"
-          class="input-with-select"
-          clearable
-          @clear="clearInput"
-        >
-          <el-button
-            slot="append"
-            icon="el-icon-search"
-            @click="btnSearch"
-          ></el-button>
-        </el-input>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="primary" @click="addDialogVisible = true"
-          >添加权限</el-button
-        >
-      </el-col>
-    </el-row>
-    <el-table :data="actionList" border stripe>
-      <el-table-column type="index" label="#"></el-table-column>
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="path" label="路径"></el-table-column>
-      <el-table-column prop="remark" label="备注"></el-table-column>
-      <el-table-column label="级别">
-        <template v-slot="scope">
-          <el-tag type="primary" v-if="scope.row.pid == 0">一级权限</el-tag>
-          <el-tag type="warning" v-else>二级权限</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template v-slot="scope">
-          <el-button
-            type="primary"
-            icon="el-icon-edit"
-            size="mini"
-            @click="showEditAction(scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            size="mini"
-            @click="deleteAction(scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 添加权限对话框 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="addDialogVisible"
-      width="50%"
-      @close="resetAddForm"
-    >
-      <el-alert
-        title="注意：如果没有选择父级权限则添加的权限为一级权限"
-        type="warning"
-        show-icon
-        center
-      >
-      </el-alert>
-      <!-- 对话框主体 -->
-      <el-form
-        ref="addFormRef"
-        :model="addForm"
-        :rules="addFormRules"
-        label-width="80px"
-      >
-        <el-form-item label="权限名称" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="父级权限" prop="pid">
-          <el-select
-            v-model="addForm.pid"
+    <el-card>
+      <!-- 表格显示区域 -->
+      <el-row :gutter="20">
+        <el-col :span="4">
+          <el-select v-model="queryInfo.level" @change="selectChang">
+            <el-option label="请选择" :value="0"></el-option>
+            <el-option label="一级权限" :value="1"></el-option>
+            <el-option label="二级权限" :value="2"></el-option>
+            <el-option label="三级权限" :value="3"></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="10">
+          <el-input
+            placeholder="请输入权限名称"
+            v-model="queryInfo.name"
+            class="input-with-select"
             clearable
-            placeholder="请选择父级权限"
+            @clear="clearInput"
           >
-            <el-option
-              :label="item.name"
-              :value="item.id"
-              v-for="item in ParentAction"
-              :key="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="权限路径" prop="path">
-          <el-input v-model="addForm.path"></el-input>
-        </el-form-item>
-        <el-form-item label="权限图标" prop="icon">
-          <el-input v-model="addForm.icon"></el-input>
-        </el-form-item>
-        <el-form-item label="权限备注" prop="remark">
-          <el-input v-model="addForm.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 对话框底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addAction">确 定</el-button>
-      </span>
-    </el-dialog>
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="btnSearch"
+            ></el-button>
+          </el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" @click="addDialogVisible = true"
+            >添加权限</el-button
+          >
+        </el-col>
+      </el-row>
+      <el-table :data="actionList" border stripe>
+        <el-table-column type="index" label="#"></el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="path" label="路径"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column label="级别">
+          <template v-slot="scope">
+            <el-tag type="primary" v-if="scope.row.level == 1">一级权限</el-tag>
+            <el-tag type="success" v-else-if="scope.row.level == 2"
+              >二级权限</el-tag
+            >
+            <el-tag type="warning" v-else>三级权限</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="scope">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="showEditAction(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="deleteAction(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 添加权限对话框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="addDialogVisible"
+        width="50%"
+        @close="resetAddForm"
+      >
+        <el-alert
+          title="注意：如果没有选择父级权限则添加的权限为一级权限"
+          type="warning"
+          show-icon
+          center
+        >
+        </el-alert>
+        <!-- 对话框主体 -->
+        <el-form
+          ref="addFormRef"
+          :model="addForm"
+          :rules="addFormRules"
+          label-width="80px"
+        >
+          <el-form-item label="权限名称" prop="name">
+            <el-input v-model="addForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="父级权限" prop="pid">
+            <el-cascader
+              v-model="addForm.pid"
+              :options="oneTwoActionTree"
+              :props="actionOption"
+              clearable
+            ></el-cascader>
+          </el-form-item>
+          <el-form-item label="权限路径" prop="path">
+            <el-input v-model="addForm.path"></el-input>
+          </el-form-item>
+          <el-form-item label="权限图标" prop="icon">
+            <el-input v-model="addForm.icon"></el-input>
+          </el-form-item>
+          <el-form-item label="权限备注" prop="remark">
+            <el-input v-model="addForm.remark"></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 对话框底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addAction">确 定</el-button>
+        </span>
+      </el-dialog>
 
-    <!-- 编辑权限对话框 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="editDialogVisible"
-      width="50%"
-      @close="resetEditForm"
-    >
-      <el-alert
-        title="注意：如果没有选择父级权限则添加的权限为一级权限"
-        type="warning"
-        :closable="false"
-        show-icon
-        center
+      <!-- 编辑权限对话框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="editDialogVisible"
+        width="50%"
+        @close="resetEditForm"
       >
-      </el-alert>
-      <!-- 对话框主体 -->
-      <el-form
-        ref="editFormRef"
-        :model="editForm"
-        :rules="addFormRules"
-        label-width="80px"
+        <el-alert
+          title="注意：如果没有选择父级权限则添加的权限为一级权限"
+          type="warning"
+          :closable="false"
+          show-icon
+          center
+        >
+        </el-alert>
+        <!-- 对话框主体 -->
+        <el-form
+          ref="editFormRef"
+          :model="editForm"
+          :rules="addFormRules"
+          label-width="80px"
+        >
+          <el-form-item label="权限名称" prop="name">
+            <el-input v-model="editForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="父级权限" prop="pid">
+            <el-cascader
+              v-model="editForm.pid"
+              :options="oneTwoActionTree"
+              :props="actionOption"
+              @change="changeCascader"
+              clearable
+            ></el-cascader>
+          </el-form-item>
+          <el-form-item label="权限路径" prop="path">
+            <el-input v-model="editForm.path"></el-input>
+          </el-form-item>
+          <el-form-item label="权限图标" prop="icon">
+            <el-input v-model="editForm.icon"></el-input>
+          </el-form-item>
+          <el-form-item label="权限备注" prop="remark">
+            <el-input v-model="editForm.remark"></el-input>
+          </el-form-item>
+        </el-form>
+        <!-- 对话框底部 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editAction">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- 分页区域 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+        background
       >
-        <el-form-item label="权限名称" prop="name">
-          <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="父级权限" prop="pid">
-          <el-select v-model="editForm.pid">
-            <el-option :value="0" label="请选择父级权限"></el-option>
-            <el-option
-              :label="item.name"
-              :value="item.id"
-              v-for="item in ParentAction"
-              :key="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="权限路径" prop="path">
-          <el-input v-model="editForm.path"></el-input>
-        </el-form-item>
-        <el-form-item label="权限图标" prop="icon">
-          <el-input v-model="editForm.icon"></el-input>
-        </el-form-item>
-        <el-form-item label="权限备注" prop="remark">
-          <el-input v-model="editForm.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- 对话框底部 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editAction">确 定</el-button>
-      </span>
-    </el-dialog>
+      </el-pagination>
+    </el-card>
   </div>
 </template>
 
@@ -182,7 +192,14 @@ export default {
   data() {
     return {
       actionList: [],
-      actionAllList: [],
+      oneTwoActionTree: [],
+      actionOption: {
+        value: 'id',
+        label: 'name',
+        children: 'children',
+        expandTrigger: 'hover',
+        checkStrictly: true
+      },
       queryInfo: {
         pageSize: 5,
         pageNum: 1,
@@ -194,7 +211,7 @@ export default {
         name: '',
         path: '',
         icon: '',
-        pid: '',
+        pid: [],
         remark: ''
       },
       editForm: {},
@@ -218,13 +235,11 @@ export default {
       this.totalCount = pagination.totalCount
       this.actionList = res.data.data
     },
-    //获取所有权限
-    async GetActionAllList() {
-      const res = await this.$axios.get('Action/GetActionList', {
-        params: { pageSize: 100 }
-      })
-      console.log(res)
-      this.actionAllList = res.data.data
+    //获取所有的一级权限以及二级权限
+    async getOneTwoActionTree() {
+      const { data: res } = await this.$axios.get('Action/GetOneTwoActionTree')
+      this.oneTwoActionTree = res.data
+      console.log(this.oneTwoActionTree)
     },
     //重置添加表单
     resetAddForm() {
@@ -237,14 +252,15 @@ export default {
           return this.$message.error('请输入完整的信息！')
         }
         const temp = _.cloneDeep(this.addForm)
-        temp.pid = temp.pid > 0 ? temp.pid : 0
+        temp.level = temp.pid.length + 1
+        temp.pid = temp.pid[temp.pid.length - 1]
         const { data: res } = await this.$axios.post('Action/AddAction', temp)
         if (!res.success) {
           return this.$message.error('添加异常，请稍后重试！')
         }
         this.$message.success('添加权限成功！')
         this.getActionList()
-        this.GetActionAllList()
+        this.getOneTwoActionTree()
         this.addDialogVisible = false
       })
     },
@@ -269,8 +285,8 @@ export default {
         return this.$message.error('删除异常，请稍后重试！')
       }
       this.$message.success('删除成功！')
-      this.GetActionAllList()
       this.getActionList()
+      this.getOneTwoActionTree()
     },
     //当前pageSize改变
     handleSizeChange(newSize) {
@@ -303,6 +319,15 @@ export default {
       this.editForm = res.data
       this.editDialogVisible = true
     },
+    //编辑对话框的级联选择器发生改变
+    changeCascader() {
+      if (!this.editForm.pid) {
+        this.editForm.pid = 0
+        return
+      }
+      this.editForm.level = this.editForm.pid.length + 1
+      this.editForm.pid = this.editForm.pid[this.editForm.pid.length - 1]
+    },
     //编辑权限
     editAction() {
       this.$refs.editFormRef.validate(async (valid) => {
@@ -319,6 +344,7 @@ export default {
         this.$message.success('编辑权限成功！')
         this.editDialogVisible = false
         this.getActionList()
+        this.getOneTwoActionTree()
       })
     },
     //重置权限表哦但
@@ -328,14 +354,9 @@ export default {
   },
   created() {
     this.getActionList()
-    this.GetActionAllList()
+    this.getOneTwoActionTree()
   },
-  computed: {
-    //获取所有的一级权限
-    ParentAction() {
-      return this.actionAllList.filter((item) => item.pid == 0)
-    }
-  }
+  computed: {}
 }
 </script>
 
