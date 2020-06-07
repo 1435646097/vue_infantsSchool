@@ -33,7 +33,7 @@
         </div> -->
         <!-- 用户头像 -->
         <div class="user-avator">
-          <img src="../assets/img/img.jpg" />
+          <img :src="photo" />
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -64,7 +64,8 @@ export default {
       fullscreen: false,
       name: 'Paigu',
       message: 2,
-      userName: ''
+      userName: '',
+      photo: ''
     }
   },
   computed: {},
@@ -132,8 +133,10 @@ export default {
   async created() {
     const { data: res } = await this.$axios.get('Action/GetUserInfo')
     this.userName = res.data.name
-    bus.$on('changeName', (name) => {
-      this.userName = name
+    this.photo = res.data.photo
+    bus.$on('changeInfo', (userInfo) => {
+      this.userName = userInfo.name
+      this.photo = userInfo.photo
     })
   }
 }

@@ -42,6 +42,7 @@
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="path" label="路径"></el-table-column>
+        <el-table-column prop="method" label="请求方式"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="级别">
           <template v-slot="scope">
@@ -106,6 +107,14 @@
           <el-form-item label="权限路径" prop="path">
             <el-input v-model="addForm.path"></el-input>
           </el-form-item>
+          <el-form-item label="请求方式">
+            <el-select v-model="addForm.method" placeholder="请选择">
+              <el-option label="GET" value="GET"> </el-option>
+              <el-option label="POST" value="POST"> </el-option>
+              <el-option label="DELETE" value="DELETE"> </el-option>
+              <el-option label="PUT" value="PUT"> </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="权限图标" prop="icon">
             <el-input v-model="addForm.icon"></el-input>
           </el-form-item>
@@ -156,6 +165,14 @@
           </el-form-item>
           <el-form-item label="权限路径" prop="path">
             <el-input v-model="editForm.path"></el-input>
+          </el-form-item>
+          <el-form-item label="请求方式">
+            <el-select v-model="editForm.method" placeholder="请选择">
+              <el-option label="GET" value="GET"> </el-option>
+              <el-option label="POST" value="POST"> </el-option>
+              <el-option label="DELETE" value="DELETE"> </el-option>
+              <el-option label="PUT" value="PUT"> </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="权限图标" prop="icon">
             <el-input v-model="editForm.icon"></el-input>
@@ -212,7 +229,8 @@ export default {
         path: '',
         icon: '',
         pid: [],
-        remark: ''
+        remark: '',
+        method: ''
       },
       editForm: {},
       addFormRules: {

@@ -10,6 +10,7 @@ import Student from '../components/Home/Student.vue'
 import User from '../components/Home/User.vue'
 import Grade from '../components/Home/Grade.vue'
 import Center from '../components/Home/Center.vue'
+import EditPass from '../components/Home/EditPass.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -60,6 +61,11 @@ const routes = [
         path: '/center',
         component: Center,
         meta: { title: '个人详情' }
+      },
+      {
+        path: '/editpass',
+        component: EditPass,
+        meta: { title: '修改密码' }
       }
     ]
   },

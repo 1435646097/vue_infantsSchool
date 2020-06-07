@@ -20,10 +20,15 @@ Axios.interceptors.request.use((config) => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
-Axios.interceptors.response.use((config) => {
-  NProgress.done()
-  return config
-})
+Axios.interceptors.response.use(
+  (config) => {
+    NProgress.done()
+    return config
+  },
+  (error) => {
+    ElementUI.Message.error(error.response.data.Msg)
+  }
+)
 Vue.prototype.$axios = Axios
 Vue.use(VueI18n)
 Vue.use(ElementUI)

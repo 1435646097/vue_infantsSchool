@@ -19,6 +19,24 @@
         <el-form-item label="账号" prop="account">
           <el-input v-model="userInfo.account" disabled></el-input>
         </el-form-item>
+        <el-form-item label="性别">
+          <el-radio v-model="userInfo.gender" :label="true">男</el-radio>
+          <el-radio v-model="userInfo.gender" :label="false">女</el-radio>
+        </el-form-item>
+        <el-form-item label="头像" prop="photo">
+          <el-upload
+            class="avatar-uploader"
+            action="http://localhost:5000/api/photo/uploadImg"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :headers="headerObject"
+            :drag="true"
+          >
+            <img v-if="userInfo.photo" :src="userInfo.photo" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input v-model="userInfo.phone"></el-input>
         </el-form-item>
@@ -61,6 +79,9 @@ export default {
     return {
       userInfo: {},
       formRule: {},
+      headerObject: {
+        authorization: ''
+      },
       citydata
     }
   },
@@ -81,15 +102,66 @@ export default {
       temp.address = temp.address.join(',')
       const { data: res } = await this.$axios.put('user', temp)
       if (!res.success) {
-        return this.$message.erro('更新用户数据异常，请稍后重试！！！')
+        return this.$message.error('更新用户数据异常，请稍后重试！！！')
       }
       this.$message.success('更新信息成功！！！')
-      bus.$emit('changeName', this.userInfo.name)
+      bus.$emit('changeInfo', this.userInfo)
       this.getSelfInfo()
+    },
+    //图片上传成功后
+    handleAvatarSuccess(res, file) {
+      console.log(file)
+      if (!res.success) {
+        console.log('sss')
+        return this.$message.error(res.msg)
+      }
+      this.userInfo.photo = 'http://localhost:5000/' + res.data
+    },
+    //图片上传之前
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      var isImg = true
+      console.log(file)
+      if (file.type != 'image/jpeg' && file.type != 'image/png') {
+        this.$message.error('上传头像图片只能是 JPG 格式或 PNG 格式!!')
+        isImg = false
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isImg && isLt2M
     }
   },
   created() {
+    this.headerObject.authorization = window.sessionStorage.getItem('token')
     this.getSelfInfo()
-  }
+  },
+  mounted() {}
 }
 </script>
+
+<style lang="scss" scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 360px;
+  height: 178px;
+  display: block;
+}
+</style>

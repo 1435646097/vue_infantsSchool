@@ -1,5 +1,9 @@
 <template>
-  <div>
-    Welcome to Vue
-  </div>
+  <div></div>
 </template>
+
+<script>
+export default {
+  created() {}
+}
+</script>
