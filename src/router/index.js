@@ -11,6 +11,7 @@ import User from '../components/Home/User.vue'
 import Grade from '../components/Home/Grade.vue'
 import Center from '../components/Home/Center.vue'
 import EditPass from '../components/Home/EditPass.vue'
+import Activity from '../components/Home/Activity'
 Vue.use(VueRouter)
 
 const routes = [
@@ -66,6 +67,11 @@ const routes = [
         path: '/editpass',
         component: EditPass,
         meta: { title: '修改密码' }
+      },
+      {
+        path: '/activity',
+        component: Activity,
+        meta: { title: '活动列表' }
       }
     ]
   },

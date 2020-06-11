@@ -100,7 +100,7 @@ export default {
     async editUserInfo() {
       const temp = _.cloneDeep(this.userInfo)
       temp.address = temp.address.join(',')
-      const { data: res } = await this.$axios.put('user', temp)
+      const { data: res } = await this.$axios.put('user/self', temp)
       if (!res.success) {
         return this.$message.error('更新用户数据异常，请稍后重试！！！')
       }
