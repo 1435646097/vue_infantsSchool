@@ -12,6 +12,10 @@ import Axios from 'axios'
 import './components/directives'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.config.productionTip = false
 Axios.defaults.baseURL = 'http://localhost:5000/api/'
@@ -31,6 +35,7 @@ Axios.interceptors.response.use(
 )
 Vue.prototype.$axios = Axios
 Vue.use(VueI18n)
+Vue.use(VueQuillEditor)
 Vue.use(ElementUI)
 const i18n = new VueI18n({
   locale: 'zh',

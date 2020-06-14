@@ -26,7 +26,7 @@
         <el-form-item label="头像" prop="photo">
           <el-upload
             class="avatar-uploader"
-            action="http://localhost:5000/api/photo/uploadImg"
+            :action="uploadURL"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -79,6 +79,7 @@ export default {
     return {
       userInfo: {},
       formRule: {},
+      uploadURL: 'http://localhost:5000/api/photo/uploadImg',
       headerObject: {
         authorization: ''
       },

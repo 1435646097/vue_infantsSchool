@@ -134,7 +134,7 @@ export default {
       },
       editForm: {},
       addFormRule: {
-        name: { required: true, message: '班级名称不能为空' },
+        name: { required: true, message: '班级名称不能为空',trigger:'blur' },
         userId: {
           required: true,
           message: '请选择班级负责人',
