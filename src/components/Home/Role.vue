@@ -15,10 +15,60 @@
       </el-row>
       <!-- 表格显示区域 -->
       <el-table :data="roleList" border stripe>
+        <el-table-column type="expand">
+          <template v-slot="scope">
+            <el-row
+              v-for="(item1, i1) in scope.row.children"
+              :key="item1.id"
+              :class="['bdbottom', i1 == 0 ? 'bdtop' : '', 'vcenter']"
+            >
+              <el-col :span="5">
+                <el-tag
+                  type="primary"
+                  closable
+                  @close="deleteActionById(scope.row, item1.id)"
+                  >{{ item1.name }}</el-tag
+                >
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <el-col :span="19">
+                <el-row
+                  v-for="(item2, i2) in item1.children"
+                  :key="item2.id"
+                  :class="[i2 != 0 ? 'bdtop' : '', 'vcenter']"
+                >
+                  <el-col :span="6">
+                    <el-tag
+                      type="success"
+                      closable
+                      @close="deleteActionById(scope.row, item2.id)"
+                      >{{ item2.name }}</el-tag
+                    >
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <el-col :span="18">
+                    <el-tag
+                      type="warning"
+                      v-for="item3 in item2.children"
+                      :key="item3.id"
+                      closable
+                      @close="deleteActionById(scope.row, item3.id)"
+                      >{{ item3.name }}</el-tag
+                    >
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="name" label="角色名称"></el-table-column>
+        <el-table-column
+          prop="name"
+          label="角色名称"
+          width="200"
+        ></el-table-column>
         <el-table-column prop="remark" label="角色备注"></el-table-column>
-        <el-table-column prop="isDelete" label="角色状态">
+        <el-table-column prop="isDelete" label="角色状态" width="200">
           <template v-slot="scope">
             <el-switch
               v-model="scope.row.isDelete"
@@ -174,12 +224,12 @@ export default {
     async getRoleList() {
       const { data: res } = await this.$axios.get('role')
       this.roleList = res.data
+      console.log(this.roleList)
     },
     //获取角色权限
     async getActionList() {
       const { data: res } = await this.$axios.get('action/GetActionTree')
       this.actionList = res.data
-      console.log(this.actionList)
     },
     //修改角色状态
     async editStatus(row) {
@@ -289,6 +339,28 @@ export default {
       }
       this.$message.success('设置角色权限成功！')
       this.setActionDialogVisible = false
+      this.getRoleList()
+    },
+    //删除权限根据ID
+    async deleteActionById(row, id) {
+      const result = await this.$confirm(
+        '此操作将永久删除该权限, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch((error) => error)
+      if (result != 'confirm') {
+        return this.$message.info('您取消了此操作')
+      }
+      const { data: res } = await this.$axios.delete(
+        `Action/DeleteActionByRoleId/${row.id}/Action/${id}`
+      )
+      console.log(row.children)
+      console.log(res.data)
+      row.children = res.data
     }
   },
   created() {

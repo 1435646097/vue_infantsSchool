@@ -94,7 +94,6 @@ const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   const token = window.sessionStorage.getItem('token')
-  console.log(token)
   //去login
   if (to.path == '/login') {
     if (token != null) {

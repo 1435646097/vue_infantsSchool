@@ -8,7 +8,22 @@
     </el-breadcrumb>
     <el-card>
       <!-- 添加搜索区域 -->
-      <el-row>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-input
+            placeholder="请输入用户名称"
+            v-model="queryInfo.name"
+            class="input-with-select"
+            clearable
+            @clear="clearInput"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="btnSearch"
+            ></el-button>
+          </el-input>
+        </el-col>
         <el-col :span="6">
           <el-button type="primary" @click="addDialogVisible = true"
             >添加用户</el-button
@@ -395,6 +410,14 @@ export default {
       }
       this.$message.success('设置用户角色成功！！')
       this.setRoleDialogVisible = false
+    },
+    //搜索用户
+    btnSearch() {
+      this.getUserList()
+    },
+    //清除输入框
+    clearInput() {
+      this.getUserList()
     }
   },
   created() {
