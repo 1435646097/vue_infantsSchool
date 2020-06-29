@@ -19,6 +19,7 @@ import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.config.productionTip = false
 Axios.defaults.baseURL = 'http://localhost:5000/api/'
+// Axios.defaults.baseURL = 'http://47.115.23.104:8080/api/'
 Axios.interceptors.request.use((config) => {
   NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
