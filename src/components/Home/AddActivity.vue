@@ -54,6 +54,7 @@
             </el-form-item>
             <el-form-item label="活动班级" prop="gradeId">
               <el-select v-model="addForm.gradeId">
+                <el-option label="请选择班级" :value="0"></el-option>
                 <el-option
                   :label="item.name"
                   :value="item.id"
@@ -165,11 +166,11 @@ export default {
       var isImg = true
       console.log(file)
       if (file.type != 'image/jpeg' && file.type != 'image/png') {
-        this.$message.error('上传头像图片只能是 JPG 格式或 PNG 格式!!')
+        this.$message.error('上传班级活动图片只能是 JPG 格式或 PNG 格式!!')
         isImg = false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传班级活动图片大小不能超过 2MB!')
       }
       return isImg && isLt2M
     },

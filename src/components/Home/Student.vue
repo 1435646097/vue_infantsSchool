@@ -10,6 +10,7 @@
     <el-row :gutter="20">
       <el-col :span="4">
         <el-select v-model="queryInfo.gradeId" @change="selectChang">
+          <el-option label="请选择班级" :value="0"></el-option>
           <el-option
             :label="item.name"
             :value="item.id"
